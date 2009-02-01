@@ -50,6 +50,14 @@ public class Elevator {
             return _queuedPassengers;
         }
 
+        public void addQueuedPassenger(){
+            this._queuedPassengers +=1;
+        }
+
+        public void clearQueuedPassengers(){
+            this._queuedPassengers = 0;
+        }
+
         public Floor nextFloorUp() {
             Floor next = Floor.FIRST; // default value
             switch(_number){
@@ -115,7 +123,7 @@ public class Elevator {
     Elevator() {
         _currentFloor = Floor.FIRST;
         _passengersOnboard = 0;
-        _directionOfTravel = DirectionOfTravel.STOPPED;
+        _directionOfTravel = DirectionOfTravel.UP;
 
     }
 
@@ -137,18 +145,44 @@ public class Elevator {
 
         if(_currentFloor.hasDestinationRequests()){
             stop();
-        } else {
-            move();
-        }
+        } 
 
     }
 
     private void stop() {
+        System.out.println("Stopping on "+ _currentFloor.floorName() +" floor " );
         _currentFloor.clearDestinationRequest();
+        _passengersOnboard = _passengersOnboard - _currentFloor.queuedPassengers();
+        _currentFloor.clearQueuedPassengers();
+        System.out.println(this);
 
+    }
 
-        
-
+    public void boardPassenger(int floor){
+        _passengersOnboard +=1;
+        switch(floor){
+            case 1: Floor.FIRST.makeDestinationRequest();
+                Floor.FIRST.addQueuedPassenger();
+                break;
+            case 2: Floor.SECOND.makeDestinationRequest();
+                Floor.SECOND.addQueuedPassenger();
+                break;
+            case 3: Floor.THIRD.makeDestinationRequest();
+                Floor.THIRD.addQueuedPassenger();
+                break;
+            case 4: Floor.FOURTH.makeDestinationRequest();
+                Floor.FOURTH.addQueuedPassenger();
+                break;
+            case 5: Floor.FIFTH.makeDestinationRequest();
+                Floor.FIFTH.addQueuedPassenger();
+                break;
+            case 6: Floor.SIXTH.makeDestinationRequest();
+                Floor.SIXTH.addQueuedPassenger();
+                break;
+            case 7: Floor.SEVENTH.makeDestinationRequest();
+                Floor.SEVENTH.addQueuedPassenger();
+                break;
+        }
     }
 
     @Override
@@ -157,20 +191,23 @@ public class Elevator {
 
         output.append("Currently " + _passengersOnboard + " Passengers Onboard\r\n");
         output.append("On Floor   : " + _currentFloor + "\r\n");
-        output.append("Direction of Travel : " + _directionOfTravel + "\r\n");
         return output.toString();
 
     }
 
     public static void main(String[] args) {
         Elevator theElevator = new Elevator();
-        System.out.println(theElevator.toString());
 
-        Floor.SECOND.makeDestinationRequest();
+        theElevator.boardPassenger(2);
+        theElevator.boardPassenger(2);
+        theElevator.boardPassenger(3);
 
+        System.out.println(theElevator);
+
+        for(int i=1;i<21;i++){
         theElevator.move();
-        System.out.println(theElevator.toString());
-
+        }
+        
 
         
 
