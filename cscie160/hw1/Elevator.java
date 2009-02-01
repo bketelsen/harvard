@@ -7,7 +7,7 @@ package cscie160.hw1;
  */
 public class Elevator {
 
-    public static final int MAXIMUM_CAPACITY = 3;
+    public static final int MAXIMUM_CAPACITY = 10;
     public static final int NUMBER_OF_FLOORS = 7;
 
     enum DirectionOfTravel {
@@ -16,42 +16,92 @@ public class Elevator {
 
 
     public enum Floor {
-        FIRST(1, "FIRST"),
-        SECOND(2, "SECOND"),
-        THIRD(3, "THIRD"),
-        FOURTH(4, "FOURTH"),
-        FIFTH(5, "FIFTH"),
-        SIXTH(6, "SIXTH"),
-        SEVENTH(7, "SEVENTH");
+        FIRST("FIRST", 0, false),
+        SECOND("SECOND", 0, false),
+        THIRD("THIRD", 0, false),
+        FOURTH("FOURTH", 0, false),
+        FIFTH("FIFTH", 0, false),
+        SIXTH("SIXTH", 0, false),
+        SEVENTH("SEVENTH", 0, false);
 
-        private final int number;
-        private final String name;
+        private final int _number;
+        private final String _name;
+        private int _queuedPassengers;
+        private boolean _hasDestinationRequests;
+        private Floor _nextUp;
+        private Floor _nextDown;
 
-        Floor(int number, String name) {
-            this.number = number;
-            this.name = name;
+        Floor(String name, int queuedPax, boolean hasDestinationRequests) {
+            this._number = this.ordinal() + 1;
+            this._name = name;
+            this._queuedPassengers = queuedPax;
+            this._hasDestinationRequests = hasDestinationRequests;
         }
 
         public int floorNumber() {
-            return number;
+            return _number;
         }
 
         public String floorName() {
-            return name;
+            return _name;
         }
 
-        public Floor nextFloor(DirectionOfTravel dot) {
-            int floorOperand;
-            if (dot == DirectionOfTravel.UP) {
-                floorOperand = 1;
-            } else {
-                floorOperand = -1;
+        public int queuedPassengers() {
+            return _queuedPassengers;
+        }
+
+        public Floor nextFloorUp() {
+            Floor next = Floor.FIRST; // default value
+            switch(_number){
+                case 1:  next =  Floor.SECOND;
+                    break;
+                case 2:  next = Floor.THIRD;
+                    break;
+                case 3:  next = Floor.FOURTH;
+                    break;
+                case 4:  next =  Floor.FIFTH;
+                    break;
+                case 5:  next = Floor.SIXTH;
+                    break;
+                case 6:  next =  Floor.SEVENTH;
+                    break;
+
             }
-
-            
-
-            return floor;
+            return next;
         }
+
+        public Floor nextFloorDown() {
+            Floor next = Floor.FIRST; // default value
+            switch(_number){
+                case 2:  next = Floor.FIRST;
+                    break;
+                case 3:  next = Floor.SECOND;
+                    break;
+                case 4:  next =  Floor.THIRD;
+                    break;
+                case 5:  next = Floor.FOURTH;
+                    break;
+                case 6:  next =  Floor.FIFTH;
+                    break;
+                case 7:  next = Floor.SIXTH;
+                    break;
+
+            }
+            return next;
+
+        }
+
+        public void makeDestinationRequest() {
+            this._hasDestinationRequests = true;
+        }
+
+        public void clearDestinationRequest() {
+            this._hasDestinationRequests = false;
+        }
+        public boolean hasDestinationRequests(){
+            return this._hasDestinationRequests;
+        }
+
 
     }
 
@@ -69,11 +119,35 @@ public class Elevator {
 
     }
 
-    void move() {
+    public void move() {
+
+        if (_currentFloor == Floor.FIRST) {
+            _directionOfTravel = DirectionOfTravel.UP;
+        }
+        if (_currentFloor == Floor.SEVENTH) {
+            _directionOfTravel = DirectionOfTravel.DOWN;
+        }
+
+
+        if (_directionOfTravel == DirectionOfTravel.UP) {
+            _currentFloor = _currentFloor.nextFloorUp();
+        } else if (_directionOfTravel == DirectionOfTravel.DOWN) {
+           _currentFloor = _currentFloor.nextFloorDown();
+        }
+
+        if(_currentFloor.hasDestinationRequests()){
+            stop();
+        } else {
+            move();
+        }
 
     }
 
-    void stop() {
+    private void stop() {
+        _currentFloor.clearDestinationRequest();
+
+
+        
 
     }
 
@@ -91,6 +165,15 @@ public class Elevator {
     public static void main(String[] args) {
         Elevator theElevator = new Elevator();
         System.out.println(theElevator.toString());
+
+        Floor.SECOND.makeDestinationRequest();
+
+        theElevator.move();
+        System.out.println(theElevator.toString());
+
+
+        
+
     }
 
 }
