@@ -25,14 +25,30 @@ package cscie160.hw1;
  */
 public class Elevator {
 
+    /** 
+     * <CODE>MAXIMIMUM_CAPACITY</code> declaration
+	 * Assumed to be 10 for this assignment
+     */
     public static final int MAXIMUM_CAPACITY = 10;
+
+	/** 
+ 	* <CODE>NUMBER_OF_FLOORS</code> declaration
+    * Assumed to be 7 for this assignment
+    */
     public static final int NUMBER_OF_FLOORS = 7;
 
+/** 
+* Embedded class/enumeration <code>DirectionOfTravel</code>
+*/
     enum DirectionOfTravel {
         UP, DOWN, STOPPED
     }
 
-
+	/** 
+	* Embedded class/enumeration <code>Floor</code>
+	* Floor encapsulates all the logic and data surrounding floors.
+	* Floor contains constant names e.g. <code>FIRST</code> for each floor.
+	*/
     public enum Floor {
         FIRST("FIRST", 0, false),
         SECOND("SECOND", 0, false),
@@ -49,33 +65,59 @@ public class Elevator {
         private Floor _nextUp;
         private Floor _nextDown;
 
+		/** 
+		* Default enumeration constructor
+		* @param name					The name of the floor being created
+		* @param queuedPax				Number of passengers queued for that floor
+		* @param hasDestinationRequests	Boolean indicator of whether the floor has destination requests pending
+		*/
         Floor(String name, int queuedPax, boolean hasDestinationRequests) {
             this._number = this.ordinal() + 1;
             this._name = name;
             this._queuedPassengers = queuedPax;
             this._hasDestinationRequests = hasDestinationRequests;
         }
-
+		/** 
+		* Default accessor for floor number
+		* @return 				The number of the floor instance
+		*/
         public int floorNumber() {
             return _number;
         }
-
+		/** 
+		* Default accessor for floor name
+		* @return 				The name of the floor instance
+		*/
         public String floorName() {
             return _name;
         }
 
+		/** 
+		* Default accessor for number of queued passengers
+		* @return 				The number of queued passengers for the floor instance
+		*/
         public int queuedPassengers() {
             return _queuedPassengers;
         }
-
+		/** 
+		* Adds a passenger to the list of passengers queued for this floor instance
+		*/
         public void addQueuedPassenger(){
             this._queuedPassengers +=1;
         }
-
+		/** 
+		* Clears the queued passenger list for this floor - to be used when the elevator stops and passengers disembark
+		*/
         public void clearQueuedPassengers(){
             this._queuedPassengers = 0;
         }
 
+		/** 
+		* nextFloorUp
+		* Convenience method to return the next floor up on the chain
+		* Added to facilitate moving up and down without complicated if statements
+		* Artifact of design decision to use embedded enumeration of floors instead of simple floor array
+		*/
         public Floor nextFloorUp() {
             Floor next = Floor.FIRST; // default value
             switch(_number){
@@ -95,7 +137,12 @@ public class Elevator {
             }
             return next;
         }
-
+		/** 
+		* nextFloorDown
+		* Convenience method to return the next floor down on the chain
+		* Added to facilitate moving up and down without complicated if statements
+		* Artifact of design decision to use embedded enumeration of floors instead of simple floor array
+		*/
         public Floor nextFloorDown() {
             Floor next = Floor.FIRST; // default value
             switch(_number){
@@ -117,13 +164,25 @@ public class Elevator {
 
         }
 
+		/** 
+		* makeDestinationRequest
+		* Modifies the <code>hasDestinationRequests</code> flag to be <code>true</code>
+		*/
         public void makeDestinationRequest() {
             this._hasDestinationRequests = true;
         }
-
+		/** 
+		* clearDestinationRequest
+		* Modifies the <code>hasDestinationRequests</code> flag to be <code>false</code>
+		*/
         public void clearDestinationRequest() {
             this._hasDestinationRequests = false;
         }
+
+		/** 
+		* hasDestinationRequests
+		* @return				<code>true</code> if the floor has pending destination requests
+		*/
         public boolean hasDestinationRequests(){
             return this._hasDestinationRequests;
         }
