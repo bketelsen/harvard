@@ -18,10 +18,6 @@ package cscie160.hw1;
  * <li>Add self-documenting javadoc comments to your class. Run the javadoc utility on your class and submit the resulting HTML file, Elevator.html, with your work. If you are submitting hard copy, submit a printout from your browser displaying the html documentation for the class. [This requirement will apply to every homework during the course.]</li>
  * </ul>
  *
- * @param  url  an absolute URL giving the base location of the image
- * @param  name the location of the image, relative to the url argument
- * @return      the image at the specified URL
- * @see         Image
  */
 public class Elevator {
 
@@ -196,7 +192,9 @@ public class Elevator {
     private int _passengersOnboard;
     private java.util.HashMap _floorQueue;
 
-
+	/**
+	* Constructor for Elevator class - no arguments
+	*/
     Elevator() {
         _currentFloor = Floor.FIRST;
         _passengersOnboard = 0;
@@ -204,6 +202,12 @@ public class Elevator {
 
     }
 
+	/**
+	* The move method progresses the elevator up and down.  If the elevator is on the first floor
+	* it sets the direction of travel to UP.  If the elevator is on the top floor, it sets the 
+	* direction of travel to DOWN.  If there are pending destination requests, the elevator will
+	* stop.
+	*/
     public void move() {
 
         if (_currentFloor == Floor.FIRST) {
@@ -226,6 +230,10 @@ public class Elevator {
 
     }
 
+	/**
+	* Stop the elevator, disembarking passengers on board.  Clears the flag that marks a floor
+	* as having queued passengers.
+	*/
     private void stop() {
         System.out.println("Stopping on "+ _currentFloor.floorName() +" floor " );
         _currentFloor.clearDestinationRequest();
@@ -235,6 +243,12 @@ public class Elevator {
 
     }
 
+	/**
+	* boardPassenger
+	* Adds the passenger to the list of passengers on the elevator.
+	*
+	* @param floor		The integer representing the floor the passenger is requesting
+	*/
     public void boardPassenger(int floor){
         _passengersOnboard +=1;
         switch(floor){
@@ -261,7 +275,10 @@ public class Elevator {
                 break;
         }
     }
-
+	/**
+	* Override the Object.toString() method for useful and attractive output
+	* 
+	*/
     @Override
     public String toString() {
         StringBuilder output = new StringBuilder();
@@ -272,6 +289,11 @@ public class Elevator {
 
     }
 
+
+	/**
+	* main method to be executed when called from the command line
+	*
+	*/
     public static void main(String[] args) {
         Elevator theElevator = new Elevator();
 
